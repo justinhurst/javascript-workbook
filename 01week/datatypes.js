@@ -1,30 +1,30 @@
 //1. Write a JavaScript program to display the current day and time.
-  // display current date https://www.w3schools.com/js/js_dates.asp
-  // new Date()
+// display current date https://www.w3schools.com/js/js_dates.asp
+// new Date()
 const getCurrentDate=()=>{
   return new Date()
 }
 getCurrentDate();
 
 //2. Write a JavaScript program to convert a number to a string
-  // https://www.w3schools.com/jsref/jsref_tostring_number.asp
-  // num.toString()
+// https://www.w3schools.com/jsref/jsref_tostring_number.asp
+// num.toString()
 const numToString=(num)=>{
   return num.toString()
 }
 numToString(100);
 
 //3. Write a JavaScript program to convert a string to the number.
-  // https://www.w3schools.com/jsref/jsref_number.asp
-  // Number(), parseInt()
+// https://www.w3schools.com/jsref/jsref_number.asp
+// Number(), parseInt()
 const stringToNum=(str)=>{
   return Number(str)
 }
 stringToNum('999');
 
 //4. Write a JavaScript program that takes in different datatypes and prints out whether they are a:
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof
-  // typeof
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof
+// typeof
 const whatVarType=(val)=>{
   return typeof val
 }
