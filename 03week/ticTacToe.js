@@ -42,7 +42,6 @@ function printBoard() {
   // 2) check if the diagonal combinations have the same value in all three places
     // board[0][0] && board[1][1] && board[2][2] || board[0][2] && board[1][1] && board[2][0]
 
-
 function horizontalWin() {
   // Your code here
   if( board[0].every(x => x == playerTurn) || board[1].every(x => x == playerTurn) || board[2].every(x => x == playerTurn) ){
