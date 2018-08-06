@@ -60,32 +60,32 @@ function pigLatin(word) {
   // use .push() to add 'ay' to the end of the letters split array
 
   //global word variable
-  word = word.toLowerCase();
-  const checkIfValidString = (word) => {
+  let formattedWord = word.toLowerCase();
+  const checkIfValidString = (formattedWord) => {
     const alphabet = 'abcdefghijklmnopqrstuvwxyz';
     let letterFound = 0;
-    const wordIntoLetters = word.split("");
+    const wordIntoLetters = formattedWord.split("");
     const uniqueLetters = wordIntoLetters.filter(function(item, index){
       return wordIntoLetters.indexOf(item) >= index;
     });
-    word = uniqueLetters.join("");
+    formattedWord = uniqueLetters.join("");
     for ( let a = 0; a < alphabet.length; a++) {
       const alphabetLetter = alphabet[a];
-      if (word.indexOf(alphabetLetter) > -1){
+      if (formattedWord.indexOf(alphabetLetter) > -1){
         letterFound++;
       }
     }
-    return letterFound == word.length
+    return letterFound == formattedWord.length
   }
-  const determineWordEnding = (word) => {
-    if ((word.charAt(0) == 'a') || (word.charAt(0) == 'e') || (word.charAt(0) == 'i') || (word.charAt(0) == 'o') || (word.charAt(0) == 'u') || (word.charAt(0) == 'y') ) {
+  const determineWordEnding = (formattedWord) => {
+    if ((formattedWord.charAt(0) == 'a') || (formattedWord.charAt(0) == 'e') || (formattedWord.charAt(0) == 'i') || (formattedWord.charAt(0) == 'o') || (formattedWord.charAt(0) == 'u') || (formattedWord.charAt(0) == 'y') ) {
       return 'yay'
     } else {
       return 'ay'
     }
   }
-  const rearrangeLetters = (word) => {
-    const wordIntoLetters = word.split("");
+  const rearrangeLetters = (formattedWord) => {
+    const wordIntoLetters = formattedWord.split("");
     for(let i = 0; i < wordIntoLetters.length; i++){
       const item = wordIntoLetters[i];
       if ( (item == 'a') || (item == 'e') || (item == 'i') || (item == 'o') || (item == 'u') || (item == 'y') ) {
@@ -95,13 +95,13 @@ function pigLatin(word) {
         i--;
       }
     }
-    wordIntoLetters.push(determineWordEnding(word));
+    wordIntoLetters.push(determineWordEnding(formattedWord));
     const translatedWord = wordIntoLetters.join("");
     return translatedWord
   }
 
-  if(word && checkIfValidString(word)){
-    return rearrangeLetters(word)
+  if(formattedWord && checkIfValidString(formattedWord)){
+    return rearrangeLetters(formattedWord)
   } else {
     return 'Enter a valid word without spaces, numbers or special characters. Only letters are allowed'
   }
