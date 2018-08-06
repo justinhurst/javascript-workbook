@@ -9,9 +9,34 @@ const rl = readline.createInterface({
 
 
 function rockPaperScissors(hand1, hand2) {
-
   // Write code here
+  // function should take in two inputs and then compare them to see which hand wins a game of rock, paper, scissors
+  //normalize the inputs to remove errors arising from lower/uppercase letters and spaces
+  //use .trim() and .toLowerCase()
+  const hand1Formatted = hand1.toLowerCase().trim();
+  const hand2Formatted = hand2.toLowerCase().trim();
+  //create conditions to determine which hand wins the game
+  //instead of using tons of conditionals, try and place all conditions in one conditional
+  const areValidInputs = () => {
+    if ( (hand1Formatted == 'rock' || hand1Formatted == 'paper' || hand1Formatted == 'scissors') && (hand2Formatted == 'rock' || hand2Formatted == 'paper' || hand2Formatted == 'scissors') ){
+      return true
+    }
+  }
 
+  if( areValidInputs()){
+    if( hand1Formatted == hand2Formatted ){
+      //set the conditions for a tied game
+      return "It's a tie!"
+    } else if( (hand1Formatted == 'rock' && hand2Formatted == 'scissors') || (hand1Formatted == 'paper' && hand2Formatted == 'rock') || (hand1Formatted == 'scissors' && hand2Formatted == 'paper') ){
+      //set the conditions for a hand 1 to win the game
+      return 'Hand one wins!'
+    } else if( (hand1Formatted == 'rock' && hand2Formatted == 'paper') || (hand1Formatted == 'paper' && hand2Formatted == 'scissors') || (hand1Formatted == 'scissors' && hand2Formatted == 'rock') ){
+      //set conditions for hand 2 to win the game
+      return 'Hand two wins!'
+    }
+  } else {
+    return 'inputs are invalid'
+  }
 }
 
 function getPrompt() {
