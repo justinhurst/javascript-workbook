@@ -28,7 +28,7 @@ function printStacks() {
   // movePiece()
     // move a disk from the top of one stack, and place it at the end of another stack. .pop() and .push()
   // isLegal()
-    // function should make sure only one disk is moving, and the destination peg is empty or the top disk of destination stack is smaller than the moved disk
+    // function should make sure only one disk is moving, and the destination peg is empty or the top disk of destination stack is smaller than the moved disk stack.length() and the
   // checkForWin()
     // checks to see if the middle or right stack is in descending order from largest to smallest [4,3,2,1]
     // just checking if array == to array will not work. have to manually check the values of the array using a loop
@@ -38,48 +38,52 @@ function printStacks() {
     // parent function that calls other critical functions of the game
     // check if the move is a legal move isLegal()
     // if it is a legal move than move the disk
+    // check for a win after the move
+    // if the player wins the game, reset the game, set stacks object to values before game started
 */
+function resetGame(){
+  stacks.a = [4,3,2,1];
+  stacks.b = [];
+  stacks.c = [];
+}
 function movePiece(from, to) {
-  // Your code here
-  to.push(from.pop());
+  stacks[to].push(stacks[from].pop());
 }
 
-function isLegal(fromValue, toValue) {
-  // Your code here
-  //console.log('from : ' + fromValue + ' | to : ' + toValue);
-  return ( toValue == undefined || fromValue < toValue );
-
+function isLegal(startStack, endStack) {
+  const possibleStacks = ['a','b','c'];
+  if( possibleStacks.includes(startStack, endStack ) ){
+    const fromValue = stacks[startStack][stacks[startStack].length -1]
+    const toValue =  stacks[endStack][stacks[endStack].length -1];
+    return ( toValue == undefined || fromValue < toValue );
+  } else {
+    return false
+  }
 }
 
-function checkForWin(stack) {
-  // Your code here
-  console.log('check for win');
+function checkForWin() {
   const descStack = [4,3,2,1];
-  if(stacks[stack].length !== descStack.length){
+  if(stacks['b'].length !== descStack.length && stacks['c'].length !== descStack.length){
     return false;
-    for(var i = stacks[stack].length; i--;) {
-      if(stacks[stack][i] !== descStack[i]){
+    for(let i = descStack.length; i--;) {
+      if(stacks['b'][i] !== descStack[i] || stacks['c'][i] !== descStack[i]){
         return false;
       }
     }
   }
-  console.log('you win');
+  console.log('You Win, resetting the game.');
+  resetGame();
   return true;
 } 
 
 function towersOfHanoi(startStack, endStack) {
-  // Your code here
-  const fromStack = stacks[startStack];
-  const toStack = stacks[endStack];
-  if( isLegal(fromStack[fromStack.length -1], toStack[toStack.length -1]) ){
-    movePiece(fromStack,toStack);
-    checkForWin('b');
-    checkForWin('c')
+  if( isLegal(startStack, endStack) ){
+    movePiece(startStack,endStack);
+    checkForWin();
   } else {
     console.log('please make a valid move');
-    return 'Please make a valid move.'
+    return false
   }
-  
 }
 
 function getPrompt() {
@@ -127,6 +131,23 @@ if (typeof describe === 'function') {
       assert.equal(checkForWin(), true);
       stacks = { a: [1], b: [4, 3, 2], c: [] };
       assert.equal(checkForWin(), false);
+    });
+  });
+  describe('#isLegal()', () => {
+    it('should not allow a move to non existing peg', () => {
+      stacks = {
+        a: [4, 3, 2],
+        b: [1],
+        c: []
+      };
+      assert.equal(isLegal('d', 'b'), false);
+    });
+  });
+  describe('#towersOfHanoi()', () => {
+    it('should reset game afer a win', () => {
+      stacks = { a: [1], b: [4, 3, 2], c: [] };
+      towersOfHanoi('a', 'b');
+      assert.deepEqual(stacks, { a: [4, 3, 2, 1], b: [], c: [] });
     });
   });
 
