@@ -40,13 +40,11 @@ function printStacks() {
 */
 function movePiece(from, to) {
   // Your code here
-  to.push(from.pop());
+ 
 }
 
 function isLegal(fromValue, toValue) {
   // Your code here
-  console.log('from : ' + fromValue + ' | to : ' + toValue);
-  return ( toValue == undefined || fromValue < toValue );
 
 }
 
@@ -57,15 +55,7 @@ function checkForWin() {
 
 function towersOfHanoi(startStack, endStack) {
   // Your code here
-  const fromStack = stacks[startStack];
-  const toStack = stacks[endStack];
-  if( isLegal(fromStack[fromStack.length -1], toStack[toStack.length -1]) ){
-    movePiece(fromStack,toStack);
-  } else {
-    console.log('please make a valid move');
-    return 'Please make a valid move.'
-  }
-  
+ 
 }
 
 function getPrompt() {
