@@ -8,7 +8,7 @@ const rl = readline.createInterface({
 });
 
 let stacks = {
-  a: [4, 3, 2, 1],
+  a: [4,3,2,1],
   b: [],
   c: []
 };
@@ -30,7 +30,8 @@ function printStacks() {
   // isLegal()
     // function should make sure only one disk is moving, and the destination peg is empty or the top disk of destination stack is smaller than the moved disk
   // checkForWin()
-    // checks to see if the farthest stack to the right is in descending order from largest to smallest [4,3,2,1]
+    // checks to see if the middle or right stack is in descending order from largest to smallest [4,3,2,1]
+    // just checking if array == to array will not work. have to manually check the values of the array using a loop
   // resetGame()
     // restarts that game and clears all stacks except for farthest left stack, and makes it in descending order largest to smallesr [4,3,2,1]
   //towersOfHanoi
@@ -40,22 +41,45 @@ function printStacks() {
 */
 function movePiece(from, to) {
   // Your code here
- 
+  to.push(from.pop());
 }
 
 function isLegal(fromValue, toValue) {
   // Your code here
+  //console.log('from : ' + fromValue + ' | to : ' + toValue);
+  return ( toValue == undefined || fromValue < toValue );
 
 }
 
-function checkForWin() {
+function checkForWin(stack) {
   // Your code here
-
-}
+  console.log('check for win');
+  const descStack = [4,3,2,1];
+  if(stacks[stack].length !== descStack.length){
+    return false;
+    for(var i = stacks[stack].length; i--;) {
+      if(stacks[stack][i] !== descStack[i]){
+        return false;
+      }
+    }
+  }
+  console.log('you win');
+  return true;
+} 
 
 function towersOfHanoi(startStack, endStack) {
   // Your code here
- 
+  const fromStack = stacks[startStack];
+  const toStack = stacks[endStack];
+  if( isLegal(fromStack[fromStack.length -1], toStack[toStack.length -1]) ){
+    movePiece(fromStack,toStack);
+    checkForWin('b');
+    checkForWin('c')
+  } else {
+    console.log('please make a valid move');
+    return 'Please make a valid move.'
+  }
+  
 }
 
 function getPrompt() {
