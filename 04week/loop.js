@@ -21,12 +21,14 @@ What is the difference between a for loop and a for...in loop?
 What is the difference between a while loop and a do...while loop?
 */
 
+//Use a for loop to console.log each item in the array carsInReverse.
 const carsInReverse = ['Honda, Jeep, Ford, Mazda, Chevy, Fiat, Ferrari, Buick']
 
 for ( let i = 0; i < carsInReverse.length; i++) {
     console.log(carsInReverse[i]);
 }
 
+//Create an object (an array with keys and values) called persons with the following data:
 const persons = {
     firstName: "Jane",
     lastName: "Doe",
@@ -34,12 +36,22 @@ const persons = {
     gender: "female"
 }
 
+//Use a for...in loop to console.log each key.
 for ( key in persons ) {
     console.log(key);
 }
 
+//Then use a for...in loop and if state to console.log the value associated with the key birthDate.
 for ( key in persons ) {
     if ( key == 'birthDate') {
         console.log( persons[key] );
     }
+}
+
+//Use a do...while loop to console.log the numbers from 1 to 1000.
+let n = 0;
+
+while (n < 1000) {
+  n++;
+  console.log(n);
 }
