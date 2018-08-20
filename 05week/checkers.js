@@ -20,20 +20,22 @@ var setBoard = [
 ]
 
 class Checker {
-  constructor(symbol,row,column) {
+  constructor(symbol,id,row,column) {
     this.symbol = symbol;
+    this.id = id;
     this.row = row;
     this.column = column;
   }
-  updateCoors(row,col){
-    this.row = row;
-    this.column = col;
+  updateCoords(row,col){
+    this.row = Number(row);
+    this.column = Number(col);
   }
 }
 
 class Board {
   constructor() {
     this.grid = [];
+    this.checkers = [];
   }
   // method that creates an 8x8 array, filled with null values
   createGrid() {
@@ -47,11 +49,14 @@ class Board {
     }
   }
   addCheckers(){
+    let checkerID = 1;
     for (let row = 0; row < 8; row++) {
       for (let column = 0; column < 8; column++) {
         if( setBoard[row][column] ) {
-          const createAChecker = new Checker(setBoard[row][column],row,column);
+          const createAChecker = new Checker(setBoard[row][column],checkerID,row,column);
           this.grid[row][column] = createAChecker;
+          this.checkers.push(createAChecker);
+          checkerID++;
         }
       }
     }
@@ -113,24 +118,40 @@ class Game {
   }
   moveChecker(whichPiece, toWhere) {
     //console.log('move checker function called');
-    const whichPieceCoordinates = whichPiece.split('');
-    const toWhereCoordinates = toWhere.split('');
-    //console.log('whichPieceCoordinates : ' , whichPieceCoordinates );
-    //console.log('toWhereCoordinates : ' , toWhereCoordinates );
+    const whichPieceCoordinates = whichPiece.split(''); //[2,1]
+    const toWhereCoordinates = toWhere.split(''); //[3,0]
+    let moveType = undefined;
+    if( toWhereCoordinates[0] - whichPieceCoordinates[0] > 1 ){
+      console.log('kill Move, going down');
+      moveType = 'killMoveDown'
+    } else if( whichPieceCoordinates[0] - toWhereCoordinates[0] > 1 ){
+      console.log('kill Move, going up');
+      moveType = 'killMoveUp'
+    } else {
+      console.log('regular move');
+      moveType = "regularMove"
+    }
     const checkerToMove = this.board.grid[whichPieceCoordinates[0]][whichPieceCoordinates[1]];
     const toSpace = this.board.grid[toWhereCoordinates[0]][toWhereCoordinates[1]];
     if(checkerToMove){
+      // there is a checker to move
       if(!toSpace){
+        // to an empty space
         this.board.grid[toWhereCoordinates[0]][toWhereCoordinates[1]] = checkerToMove;
-        checkerToMove.updateCoors(toWhereCoordinates[0],toWhereCoordinates[1]);
+        checkerToMove.updateCoords(toWhereCoordinates[0],toWhereCoordinates[1]);
         this.board.grid[whichPieceCoordinates[0]][whichPieceCoordinates[1]] = null;
+        console.log('check for a kill');
+        if(!moveType == 'regularMove'){
+          //decide what checker to remove from the board.grid and the board.checkers array
+          console.log('this is not a regular move');
+        }
+        //console.log(this.board.checkers);
       } else {
         console.log('there is something in that space, cant move, try again');
       }
     } else {
       console.log('there is no checker to move, try again');
     }
-    
   } 
 }
 
