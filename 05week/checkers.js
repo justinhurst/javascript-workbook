@@ -8,13 +8,34 @@ const rl = readline.createInterface({
 });
 
 
-function Checker() {
-  // Your code here
+var setBoard = [
+	[ null, 'X', null, 'X', null, 'X', null, 'X' ],
+	[ 'X', null, 'X', null, 'X', null, 'X', null ],
+	[ null, 'X', null, 'X', null, 'X', null, 'X' ],
+  [ null , null, null, null, null, null, null, null ],
+  [ null , null, null, null, null, null, null, null ],  
+	[ 'O', null, 'O', null, 'O', null, 'O', null ],
+	[ null, 'O', null, 'O', null, 'O', null, 'O' ],
+	[ 'O', null, 'O', null, 'O', null, 'O', null ]
+]
+
+class Checker {
+  constructor(symbol,id,row,column) {
+    this.symbol = symbol;
+    this.id = id;
+    this.row = row;
+    this.column = column;
+  }
+  updateCoords(row,col){
+    this.row = Number(row);
+    this.column = Number(col);
+  }
 }
 
 class Board {
   constructor() {
-    this.grid = []
+    this.grid = [];
+    this.checkers = [];
   }
   // method that creates an 8x8 array, filled with null values
   createGrid() {
@@ -26,6 +47,22 @@ class Board {
         this.grid[row].push(null);
       }
     }
+  }
+  addCheckers(){
+    let checkerID = 0;
+    for (let row = 0; row < 8; row++) {
+      for (let column = 0; column < 8; column++) {
+        if( setBoard[row][column] ) {
+          const createAChecker = new Checker(setBoard[row][column],checkerID,row,column);
+          this.grid[row][column] = createAChecker;
+          this.checkers.push(createAChecker);
+          checkerID++;
+        }
+      }
+    }
+  }
+  killChecker(checkerID){
+    this.checkers.splice(checkerID,1);
   }
   viewGrid() {
     // add our column numbers
@@ -53,6 +90,25 @@ class Board {
   }
 
   // Your code here
+  //a checker board must be created
+  // a board consists of spaces
+    // a space is available for move or it is not available for a move
+      // empty space is unavailable for a move or a checker to be on
+      // a filled space is a space that you can move to or a checker can be on
+    // valid spaces will either be empty or have a colored checker in it
+  // checker 
+    // will have a color 
+    // will be in a space
+  // moveChecker is going to take two parameters a from spot, and a to spot
+    // will check if move and to cooridates are valid isValidMove
+      // isValidMove
+        // is the space the checker is moving to an empty available space?
+      //isKillMove
+      //isRegMove
+      // from and to spot will be coordiantes
+    // from cooridation must contain current players color
+    // to corridante must be a valid empty space, or 
+  
 }
 
 class Game {
@@ -61,7 +117,61 @@ class Game {
   }
   start() {
     this.board.createGrid();
+    this.board.addCheckers();
   }
+  moveChecker(whichPiece, toWhere) {
+    //console.log('move checker function called');
+    const whichPieceCoordinates = whichPiece.split(''); //[2,1]
+    const toWhereCoordinates = toWhere.split(''); //[3,0]
+    let moveUpOrDown = undefined;
+    let moveLeftOrRight = undefined;
+    //need to determine which way the checker is moving up or down, and then left or right
+    if( toWhereCoordinates[0] - whichPieceCoordinates[0] > 1 ){
+      moveUpOrDown = 'downKill'
+    } else if( whichPieceCoordinates[0] - toWhereCoordinates[0] > 1 ){
+      moveUpOrDown = 'upKill'
+    } else {
+      moveUpOrDown = "regular"
+    }
+    if(toWhereCoordinates[1] > whichPieceCoordinates[1]){
+      moveLeftOrRight = 'right'
+    } else {
+      moveLeftOrRight = 'left'
+    }
+    const checkerToMove = this.board.grid[whichPieceCoordinates[0]][whichPieceCoordinates[1]];
+    const toSpace = this.board.grid[toWhereCoordinates[0]][toWhereCoordinates[1]];
+    if(checkerToMove){
+      // there is a checker to move
+      if(!toSpace){
+        // to an empty space
+        this.board.grid[toWhereCoordinates[0]][toWhereCoordinates[1]] = checkerToMove;
+        checkerToMove.updateCoords(toWhereCoordinates[0],toWhereCoordinates[1]);
+        this.board.grid[whichPieceCoordinates[0]][whichPieceCoordinates[1]] = null;
+        if( moveUpOrDown == 'downKill' ){
+          if(moveLeftOrRight == 'right'){
+            this.board.checkers.splice(this.board.grid[Number(toWhereCoordinates[0] - 1)][Number(toWhereCoordinates[1] - 1)].id, 1);
+            this.board.grid[toWhereCoordinates[0] - 1][toWhereCoordinates[1] - 1] = null;
+          } else if(moveLeftOrRight == 'left'){
+            this.board.checkers.splice(this.board.grid[Number(toWhereCoordinates[0] - 1)][Number(toWhereCoordinates[1] + 1)].id, 1);
+            this.board.grid[Number(toWhereCoordinates[0] - 1)][Number(toWhereCoordinates[1] + 1)] = null;
+          }
+        } else if (moveUpOrDown == 'upKill'){
+          if(moveLeftOrRight == 'right'){
+            this.board.checkers.splice(this.board.grid[Number(toWhereCoordinates[0] + 1)][Number(toWhereCoordinates[1] - 1)].id, 1);
+            this.board.grid[toWhereCoordinates[0] + 1][toWhereCoordinates[1] - 1] = null;
+          } else if(moveLeftOrRight == 'left'){
+            this.board.checkers.splice(this.board.grid[Number(toWhereCoordinates[0] + 1)][Number(toWhereCoordinates[1] + 1)].id, 1);
+        
+            this.board.grid[Number(toWhereCoordinates[0] + 1)][Number(toWhereCoordinates[1] + 1)] = null;
+          }
+        }
+      } else {
+        console.log('there is something in that space, cant move, try again');
+      }
+    } else {
+      console.log('there is no checker to move, try again');
+    }
+  } 
 }
 
 function getPrompt() {
