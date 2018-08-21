@@ -49,7 +49,7 @@ class Board {
     }
   }
   addCheckers(){
-    let checkerID = 1;
+    let checkerID = 0;
     for (let row = 0; row < 8; row++) {
       for (let column = 0; column < 8; column++) {
         if( setBoard[row][column] ) {
@@ -60,6 +60,9 @@ class Board {
         }
       }
     }
+  }
+  killChecker(checkerID){
+    this.checkers.splice(checkerID,1);
   }
   viewGrid() {
     // add our column numbers
@@ -120,16 +123,20 @@ class Game {
     //console.log('move checker function called');
     const whichPieceCoordinates = whichPiece.split(''); //[2,1]
     const toWhereCoordinates = toWhere.split(''); //[3,0]
-    let moveType = undefined;
+    let moveUpOrDown = undefined;
+    let moveLeftOrRight = undefined;
+    //need to determine which way the checker is moving up or down, and then left or right
     if( toWhereCoordinates[0] - whichPieceCoordinates[0] > 1 ){
-      console.log('kill Move, going down');
-      moveType = 'killMoveDown'
+      moveUpOrDown = 'downKill'
     } else if( whichPieceCoordinates[0] - toWhereCoordinates[0] > 1 ){
-      console.log('kill Move, going up');
-      moveType = 'killMoveUp'
+      moveUpOrDown = 'upKill'
     } else {
-      console.log('regular move');
-      moveType = "regularMove"
+      moveUpOrDown = "regular"
+    }
+    if(toWhereCoordinates[1] > whichPieceCoordinates[1]){
+      moveLeftOrRight = 'right'
+    } else {
+      moveLeftOrRight = 'left'
     }
     const checkerToMove = this.board.grid[whichPieceCoordinates[0]][whichPieceCoordinates[1]];
     const toSpace = this.board.grid[toWhereCoordinates[0]][toWhereCoordinates[1]];
@@ -140,12 +147,24 @@ class Game {
         this.board.grid[toWhereCoordinates[0]][toWhereCoordinates[1]] = checkerToMove;
         checkerToMove.updateCoords(toWhereCoordinates[0],toWhereCoordinates[1]);
         this.board.grid[whichPieceCoordinates[0]][whichPieceCoordinates[1]] = null;
-        console.log('check for a kill');
-        if(!moveType == 'regularMove'){
-          //decide what checker to remove from the board.grid and the board.checkers array
-          console.log('this is not a regular move');
+        if( moveUpOrDown == 'downKill' ){
+          if(moveLeftOrRight == 'right'){
+            this.board.checkers.splice(this.board.grid[Number(toWhereCoordinates[0] - 1)][Number(toWhereCoordinates[1] - 1)].id, 1);
+            this.board.grid[toWhereCoordinates[0] - 1][toWhereCoordinates[1] - 1] = null;
+          } else if(moveLeftOrRight == 'left'){
+            this.board.checkers.splice(this.board.grid[Number(toWhereCoordinates[0] - 1)][Number(toWhereCoordinates[1] + 1)].id, 1);
+            this.board.grid[Number(toWhereCoordinates[0] - 1)][Number(toWhereCoordinates[1] + 1)] = null;
+          }
+        } else if (moveUpOrDown == 'upKill'){
+          if(moveLeftOrRight == 'right'){
+            this.board.checkers.splice(this.board.grid[Number(toWhereCoordinates[0] + 1)][Number(toWhereCoordinates[1] - 1)].id, 1);
+            this.board.grid[toWhereCoordinates[0] + 1][toWhereCoordinates[1] - 1] = null;
+          } else if(moveLeftOrRight == 'left'){
+            this.board.checkers.splice(this.board.grid[Number(toWhereCoordinates[0] + 1)][Number(toWhereCoordinates[1] + 1)].id, 1);
+        
+            this.board.grid[Number(toWhereCoordinates[0] + 1)][Number(toWhereCoordinates[1] + 1)] = null;
+          }
         }
-        //console.log(this.board.checkers);
       } else {
         console.log('there is something in that space, cant move, try again');
       }
